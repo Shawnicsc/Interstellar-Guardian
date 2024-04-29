@@ -30,22 +30,6 @@ public class User implements Serializable {
      * 登录密码
      */
     private String userPassword;
-
-    /**
-     * 
-     */
-    private String avatar;
-
-    /**
-     * 
-     */
-    private String hashcode;
-
-    /**
-     * secretKey
-     */
-    private String secretKey;
-
     /**
      * 创建时间
      */
@@ -86,9 +70,6 @@ public class User implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getUserName() == null ? other.getUserName() == null : this.getUserName().equals(other.getUserName()))
             && (this.getUserPassword() == null ? other.getUserPassword() == null : this.getUserPassword().equals(other.getUserPassword()))
-            && (this.getAvatar() == null ? other.getAvatar() == null : this.getAvatar().equals(other.getAvatar()))
-            && (this.getHashcode() == null ? other.getHashcode() == null : this.getHashcode().equals(other.getHashcode()))
-            && (this.getSecretKey() == null ? other.getSecretKey() == null : this.getSecretKey().equals(other.getSecretKey()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
             && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()))
@@ -102,9 +83,6 @@ public class User implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getUserName() == null) ? 0 : getUserName().hashCode());
         result = prime * result + ((getUserPassword() == null) ? 0 : getUserPassword().hashCode());
-        result = prime * result + ((getAvatar() == null) ? 0 : getAvatar().hashCode());
-        result = prime * result + ((getHashcode() == null) ? 0 : getHashcode().hashCode());
-        result = prime * result + ((getSecretKey() == null) ? 0 : getSecretKey().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
         result = prime * result + ((getIsDelete() == null) ? 0 : getIsDelete().hashCode());
@@ -121,9 +99,6 @@ public class User implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", username=").append(userName);
         sb.append(", userpassword=").append(userPassword);
-        sb.append(", avatar=").append(avatar);
-        sb.append(", hashcode=").append(hashcode);
-        sb.append(", secretkey=").append(secretKey);
         sb.append(", createTime=").append(createTime);
         sb.append(", modifiedTime=").append(modifiedTime);
         sb.append(", isdelete=").append(isDelete);

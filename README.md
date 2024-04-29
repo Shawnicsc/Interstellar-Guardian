@@ -54,165 +54,6 @@
    ![1713788697780](/assets/1713788697780.png)
 
 ### 2.  Java 运行程序 向IPFS本地节点中上传，下载文件
-
-   ```java
-   @Service
-   // 编写上传 下载接口
-   public interface IpfsService {
-       /**
-        * 指定path+文件名称,上传至ipfs
-        *
-        * @param filePath
-        * @return
-        * @throws IOException
-        */
-       String uploadToIpfs(String filePath) throws IOException;
-   
-       /**
-        * 将byte格式的数据,上传至ipfs
-        *
-        * @param data
-        * @return
-        * @throws IOException
-        */
-       String uploadToIpfs(byte[] data) throws IOException;
-   
-       /**
-        * 根据Hash值,从ipfs下载内容,返回byte数据格式
-        *
-        * @param hash
-        * @return
-        */
-       byte[] downFromIpfs(String hash);
-   
-       /**
-        * 根据Hash值,从ipfs下载内容,并写入指定文件destFilePath
-        *
-        * @param hash
-        * @param destFilePath
-        */
-       void downFromIpfs(String hash, String destFilePath);
-   }
-   ```
-
-   
-
-   ```java
-   /**
-    * @author Shawn i
-    * @version 1.0
-    * @description: 实现上传 下载函数
-    * @date 2024/4/22 20:34
-    */
-   @Service
-   public class IpfsServiceImpl implements IpfsService {
-   
-       // ipfs 的服务器地址和端口，与yaml文件中的配置对应
-       @Value("${ipfs.config.multi-addr}")
-       private String multiAddr;
-   
-       private IPFS ipfs;
-   
-       @PostConstruct
-       public void setMultiAddr() {
-           ipfs = new IPFS(multiAddr);
-       }
-   
-       @Override
-       public String uploadToIpfs(String filePath) throws IOException {
-           NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(new File(filePath));
-   
-           MerkleNode addResult = ipfs.add(file).get(0);
-           return addResult.hash.toString();
-       }
-   
-       @Override
-       public String uploadToIpfs(byte[] data) throws IOException {
-           NamedStreamable.ByteArrayWrapper file = new NamedStreamable.ByteArrayWrapper(data);
-           MerkleNode addResult = ipfs.add(file).get(0);
-           return addResult.hash.toString();
-       }
-   
-       @Override
-       public byte[] downFromIpfs(String hash) {
-           byte[] data = null;
-           try {
-               data = ipfs.cat(Multihash.fromBase58(hash));
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-           return data;
-       }
-   
-       @Override
-       public void downFromIpfs(String hash, String destFile) {
-           byte[] data = null;
-           try {
-               data = ipfs.cat(Multihash.fromBase58(hash));
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-           if (data != null && data.length > 0) {
-               File file = new File(destFile);
-               if (file.exists()) {
-                   file.delete();
-               }
-               FileOutputStream fos = null;
-               try {
-                   fos = new FileOutputStream(file);
-                   fos.write(data);
-                   fos.flush();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               } finally {
-                   try {
-                       fos.close();
-                   } catch (IOException e) {
-                       e.printStackTrace();
-                   }
-   
-               }
-           }
-       }
-   
-   }
-   
-   ```
-
-   ```java
-   /**
-    * @author Shawn i
-    * @version 1.0
-    * @description: 编写测试类
-    * @date 2024/4/22 20:40
-    */
-   @RunWith(SpringRunner.class)
-   @SpringBootTest
-   public class IpfsServiceTest {
-       @Autowired
-       private IpfsService ipfsService;
-   
-       // 上传
-       @Test
-       public void uploadIpfs() throws IOException {
-           byte[] data = "hello world".getBytes();
-           String hash = ipfsService.uploadToIpfs(data);
-           // Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD
-           System.out.println(hash);
-       }
-   
-       // 下载
-       @Test
-       public void downloadIpfs() {
-           String hash = "Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD";
-           byte[] data = ipfsService.downFromIpfs(hash);
-           System.out.println(new String(data));
-       }
-   
-   }
-   
-   ```
-
    测试结果：
 
    ![1713789952185](/assets/1713789952185.png)
@@ -226,10 +67,15 @@
 #### 3. 实现前端交互页面
 
 #### 4. 实现后端具体接口
+   - 用户登录注册接口
+   - 文件上传下载接口
+   - 文件安全共享实现 --> 以用户ID作为密钥，hash值作为明文，使用md5加密，生成分享码，后台验证分享码
 
 #### 5. SpringCloud 解耦合 和 Redis分布式存储
 
 #### 6. 数据库实现(`mysql`)
+   - user
+   - ipfsFile
 
 #### 7. 功能和性能测试
 

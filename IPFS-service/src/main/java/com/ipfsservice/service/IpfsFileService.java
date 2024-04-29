@@ -4,11 +4,12 @@ import com.ipfsservice.domain.IpfsFile;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
 * @author 13627
-* @description 针对表【ipfsfile】的数据库操作Service
+* @description 针对表【ipfsFile】的数据库操作Service
 * @createDate 2024-04-28 21:00:11
 */
 public interface IpfsFileService extends IService<IpfsFile> {
@@ -39,7 +40,13 @@ public interface IpfsFileService extends IService<IpfsFile> {
      * 根据Hash值,从ipfs下载内容,并写入指定文件destFilePath
      *
      * @param hash
-     * @param destFilePath
+     * @param response
      */
-    void downFromIpfs(String hash, String destFilePath);
+    void downFromIpfs(String hash, HttpServletResponse response);
+
+    String shareCode(String hash);
+
+    String checkCode(String shareCode);
+
+
 }

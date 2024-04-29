@@ -1,0 +1,18 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:10086/eureka/
+server:
+  port: 8083
+spring:
+  application:
+    name: gateway
+zuul:
+  routes:
+    ipfs-service:
+      path: /**/**
+    user-service:
+      path: /**/**
+  prefix: /guardian
+  sensitive-headers: Cookie,Set-Cookie,Authorization
+  add-host-header: true # 重定向添加Host请求头

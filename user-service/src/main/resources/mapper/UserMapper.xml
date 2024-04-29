@@ -8,9 +8,6 @@
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userName" column="userName" jdbcType="VARCHAR"/>
             <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
-            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
-            <result property="hashcode" column="hashCode" jdbcType="VARCHAR"/>
-            <result property="secretKey" column="secretKey" jdbcType="VARCHAR"/>
             <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
             <result property="modifiedTime" column="MODIFIED_TIME" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
@@ -19,7 +16,6 @@
 
     <sql id="Base_Column_List">
         id,userName,userPassword,
-        avatar,hashCode,secretKey,
         CREATE_TIME,MODIFIED_TIME,isDelete,
         token
     </sql>

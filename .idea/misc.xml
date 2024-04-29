@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/serve-center/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/IPFS-service/pom.xml" />
+        <option value="$PROJECT_DIR$/GateWay/pom.xml" />
       </list>
     </option>
   </component>

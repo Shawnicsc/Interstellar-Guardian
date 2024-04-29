@@ -39,11 +39,13 @@ public class IpfsFile implements Serializable {
     /**
      * 创建时间
      */
+    @TableField("Create_Time")
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @TableField("Modified_Time")
     private Date modifiedTime;
 
     /**

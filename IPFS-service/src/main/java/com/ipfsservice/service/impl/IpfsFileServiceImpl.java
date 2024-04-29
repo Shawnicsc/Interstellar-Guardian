@@ -1,6 +1,11 @@
 package com.ipfsservice.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ipfsservice.Exception.MyException;
+import com.ipfsservice.common.constants;
 import com.ipfsservice.domain.IpfsFile;
 import com.ipfsservice.service.IpfsFileService;
 import com.ipfsservice.mapper.IpfsFileMapper;
@@ -13,9 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import static com.ipfsservice.common.constants.CODE_401;
+import static com.ipfsservice.common.constants.CODE_500;
 
 /**
 * @author 13627
@@ -71,7 +81,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
     /**
      * @description: 下载 byte数据
      * @author Shawn i
-     * @date: 2024/3/13 15:57
+     * @date: 2024/4/29 15:00
      */
     @Override
     public byte[] downFromIpfs(String hash) {
@@ -79,45 +89,69 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         try {
             data = ipfs.cat(Multihash.fromBase58(hash));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MyException(CODE_500,"服务器错误");
         }
         return data;
     }
 
     /**
-     * @description: 下载文件到指定文件夹 destFile -> D:/hhh.png  btw this function need to be improved
+     * @description: 下载文件到浏览器默认地址，btw 文件名无法获取，ipfs 通过内容寻址，文件名和hash值无直接关联
      * @author Shawn i
-     * @date: 2024/3/13 15:57
+     * @date: 2024/4/29 15:10
      */
     @Override
-    public void downFromIpfs(String hash, String destFile) {
+    public void downFromIpfs(String hash, HttpServletResponse response) {
         byte[] data = null;
         try {
             data = ipfs.cat(Multihash.fromBase58(hash));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MyException(CODE_500,"服务器错误");
         }
         if (data != null && data.length > 0) {
-            File file = new File(destFile);
-            if (file.exists()) {
-                file.delete();
-            }
-            FileOutputStream fos = null;
             try {
-                fos = new FileOutputStream(file);
-                fos.write(data);
-                fos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                // 设置响应头，告知浏览器下载文件
+                response.setContentType("application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment; filename=\"ipfsFile.ext\""); // 设置下载文件的默认名称
 
+                // 获取输出流，将数据写入到浏览器
+                OutputStream outputStream = response.getOutputStream();
+                outputStream.write(data);
+                outputStream.flush();
+            } catch (IOException e) {
+                throw new MyException(CODE_500,"服务器错误");
             }
         }
+    }
+
+    @Override
+    public String shareCode(String hash) {
+        //查找目标hash
+        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<IpfsFile>();
+        ipfsFileQueryWrapper.eq("HashCode",hash);
+        IpfsFile file = getOne(ipfsFileQueryWrapper);
+        if(file == null)
+            throw new MyException(CODE_401,"目标文件不存在");
+        if(file.getSecretKey() != null)
+            return file.getSecretKey();
+        //设置分享码
+        file.setSecretKey(SecureUtil.md5(file.getUserid()+hash));
+        //更新数据库
+        boolean update = updateById(file);
+        if(!update)
+            throw new MyException(CODE_500,"服务器错误");
+
+        return file.getSecretKey();
+
+    }
+
+    @Override
+    public String checkCode(String shareCode) {
+        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
+        ipfsFileQueryWrapper.eq("secretKey",shareCode);
+        IpfsFile one = getOne(ipfsFileQueryWrapper);
+        if(one == null)
+            return null;
+        return one.getHashcode();
     }
 
 }

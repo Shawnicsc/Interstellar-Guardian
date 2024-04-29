@@ -11,6 +11,7 @@
         <module>serve-center</module>
         <module>user-service</module>
         <module>IPFS-service</module>
+        <module>GateWay</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
