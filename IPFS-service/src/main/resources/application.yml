@@ -1,0 +1,33 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8082
+spring:
+  application:
+    name: ipfs-service
+    #数据源连接信息
+  datasource:
+    username: root
+    password: 1234
+    url: jdbc:mysql://127.0.0.1:3306/interstellar?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+    # 拉去服务地址列表的间隔时间
+    registry-fetch-interval-seconds: 10
+
+ipfs:
+  config:
+    multi-addr: /ip4/127.0.0.1/tcp/5001 # ipfs的服务器地址和端口
+
+mybatis-plus:
+  mapper-locations: classPath*:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: false # 禁止大写变小写时自动添加下划线
+  global-config:
+    db-config:
+      logic-delete-field: isDelete #默认deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

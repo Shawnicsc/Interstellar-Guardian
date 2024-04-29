@@ -1,0 +1,20 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 10086
+# 服务名称
+spring:
+  application:
+    name: eureka-serve
+eureka:
+  client:
+    # eureka 服务的地址
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+    # 自身不进行注册
+    register-with-eureka: false
+    # 不拉取服务
+    fetch-registry: false
+  server:
+    # 关闭自我保护模式
+    enable-self-preservation: false
+    delta-retention-timer-interval-in-ms: 10000 # 失效剔除间隔时间
