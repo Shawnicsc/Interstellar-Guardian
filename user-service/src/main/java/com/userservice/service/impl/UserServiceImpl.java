@@ -11,6 +11,8 @@ import com.userservice.service.UserService;
 import com.userservice.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static com.userservice.common.constants.CODE_400;
 import static com.userservice.common.constants.CODE_401;
 
@@ -30,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @date: 2024/4/27 15:57
      */
     @Override
-    public User login(User user) {
+    public User login(User user, HttpServletRequest request) {
         if(StrUtil.hasEmpty(user.getUserName(),user.getUserPassword()))
             throw new MyException(CODE_400,"缺少参数");
         user.setUserPassword(SecureUtil.md5(user.getUserPassword()+SALT));
@@ -40,6 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         String token = TokenUtils.genToken(getUser.getId().toString(), getUser.getUserPassword());
         getUser.setToken(token);
+        request.getSession().setAttribute("token",token);
 
         return getUser;
     }
