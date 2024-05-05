@@ -79,6 +79,18 @@
 
 #### 7. 功能和性能测试
 
+jmeter 测试结果 不涉及数据库接口 1000个线程测试
+
+![1714832640770](E:\java-project\Privacy-Guardian\assets\1714832640770.png)
+
+数据库测试 200个线程
+
+![1714836775929](E:\java-project\Privacy-Guardian\assets\1714836775929.png)
+
+
+
+
+
 ## 五、小组分工
 
    王惟：后端开发和接口联调
