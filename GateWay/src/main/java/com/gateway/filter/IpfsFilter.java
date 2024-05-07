@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +57,6 @@ public class IpfsFilter extends ZuulFilter {
         String token = request.getHeader("token");
         // 获取请求的URL路径
         String requestURI = request.getRequestURI();
-        String userId;
         // 检查请求的URL路径是否在被拦截的路径集合中
         for (String blockedPath : blockedPaths) {
             if (requestURI.startsWith(blockedPath)) {

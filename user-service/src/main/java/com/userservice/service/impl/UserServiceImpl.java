@@ -10,6 +10,7 @@ import com.userservice.utils.TokenUtils;
 import com.userservice.service.UserService;
 import com.userservice.mapper.UserMapper;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +26,6 @@ import static com.userservice.common.constants.CODE_401;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
     private static final String SALT = "Shawni";
-
     /**
      * @description: 登录
      * @author Shawn i

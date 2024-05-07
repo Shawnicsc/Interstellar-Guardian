@@ -1,6 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPFS 文件下载测试</title>
+</head>
 <body>
-<h1>hello word!!!</h1>
-<p>this is a html page</p>
+<h1>IPFS 文件下载测试</h1>
+<form action="/ipfs/downloadFile" method="get">
+    <label for="hash">输入文件的哈希：</label>
+    <input type="text" id="hash" name="hash" required>
+    <button type="submit">下载文件</button>
+</form>
 </body>
 </html>

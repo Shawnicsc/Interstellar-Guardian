@@ -7,8 +7,8 @@
 </head>
 <body>
 <h1>IPFS 文件下载测试</h1>
-<form action="/ipfs/share" method="post">
-    <label for="hash">IPFS 文件哈希：</label>
+<form action="http://localhost:8082/ipfs/downloadFile" method="get">
+    <label for="hash">输入文件的哈希：</label>
     <input type="text" id="hash" name="hash" required>
     <button type="submit">下载文件</button>
 </form>

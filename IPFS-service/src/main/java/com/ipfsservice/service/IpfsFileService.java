@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
 * @author 13627
@@ -34,19 +35,18 @@ public interface IpfsFileService extends IService<IpfsFile> {
      * @param hash
      * @return
      */
-    byte[] downFromIpfs(String hash);
+    byte[] downStr(String hash);
 
     /**
      * 根据Hash值,从ipfs下载内容,并写入指定文件destFilePath
      *
      * @param hash
-     * @param response
      */
-    void downFromIpfs(String hash, HttpServletResponse response);
+    byte[] downFromIpfs(String hash);
 
     String shareCode(String hash);
 
     String checkCode(String shareCode);
 
-
+    List<IpfsFile> getList(Long userid);
 }

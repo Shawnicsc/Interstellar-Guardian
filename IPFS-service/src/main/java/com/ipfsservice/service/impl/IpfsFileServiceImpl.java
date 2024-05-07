@@ -1,5 +1,6 @@
 package com.ipfsservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -9,6 +10,7 @@ import com.ipfsservice.common.constants;
 import com.ipfsservice.domain.IpfsFile;
 import com.ipfsservice.service.IpfsFileService;
 import com.ipfsservice.mapper.IpfsFileMapper;
+import com.ipfsservice.utils.RedisCacheClient;
 import io.ipfs.api.IPFS;
 import io.ipfs.api.MerkleNode;
 import io.ipfs.api.NamedStreamable;
@@ -16,6 +18,7 @@ import io.ipfs.multihash.Multihash;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +26,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.ipfsservice.common.constants.CODE_401;
 import static com.ipfsservice.common.constants.CODE_500;
@@ -40,6 +45,8 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
     private String multiAddr;
 
     private IPFS ipfs;
+
+    private Jedis jedis = RedisCacheClient.getResource();
 
     @PostConstruct
     public void setMultiAddr() {
@@ -74,6 +81,9 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         ipfsFile.setHashcode(addResult.hash.toString());
         ipfsFile.setUserid(userId);
         this.save(ipfsFile);
+        if(StrUtil.isBlank(jedis.get(ipfsFile.getHashcode())))
+            jedis.del(ipfsFile.getHashcode());
+        jedis.set(ipfsFile.getHashcode(),new String(data));
 
         return addResult.hash.toString();
     }
@@ -84,9 +94,12 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
      * @date: 2024/4/29 15:00
      */
     @Override
-    public byte[] downFromIpfs(String hash) {
+    public byte[] downStr(String hash) {
         byte[] data = null;
         try {
+            String hash1 = jedis.get(hash);
+            if(hash1 != null)
+                return hash1.getBytes(StandardCharsets.UTF_8);
             data = ipfs.cat(Multihash.fromBase58(hash));
         } catch (IOException e) {
             throw new MyException(CODE_500,"服务器错误");
@@ -100,7 +113,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
      * @date: 2024/4/29 15:10
      */
     @Override
-    public void downFromIpfs(String hash, HttpServletResponse response) {
+    public byte[] downFromIpfs(String hash) {
         byte[] data = null;
         try {
             data = ipfs.cat(Multihash.fromBase58(hash));
@@ -108,25 +121,15 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
             throw new MyException(CODE_500,"服务器错误");
         }
         if (data != null && data.length > 0) {
-            try {
-                // 设置响应头，告知浏览器下载文件
-                response.setContentType("application/octet-stream");
-                response.setHeader("Content-Disposition", "attachment; filename=\"ipfsFile.ext\""); // 设置下载文件的默认名称
-
-                // 获取输出流，将数据写入到浏览器
-                OutputStream outputStream = response.getOutputStream();
-                outputStream.write(data);
-                outputStream.flush();
-            } catch (IOException e) {
-                throw new MyException(CODE_500,"服务器错误");
-            }
+            return data;
         }
+        return null;
     }
 
     @Override
     public String shareCode(String hash) {
         //查找目标hash
-        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<IpfsFile>();
+        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
         ipfsFileQueryWrapper.eq("HashCode",hash);
         IpfsFile file = getOne(ipfsFileQueryWrapper);
         if(file == null)
@@ -152,6 +155,14 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         if(one == null)
             return null;
         return one.getHashcode();
+    }
+
+    @Override
+    public List<IpfsFile> getList(Long userid) {
+        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
+        ipfsFileQueryWrapper.eq("userid",userid);
+        List<IpfsFile> list = list(ipfsFileQueryWrapper);
+        return list;
     }
 
 }
