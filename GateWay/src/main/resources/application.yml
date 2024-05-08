@@ -7,6 +7,7 @@ server:
 spring:
   application:
     name: gateway
+# 配置消息转发路由
 zuul:
   routes:
     ipfs-service:
@@ -17,7 +18,7 @@ zuul:
       path: /user/**
       serviceId: user-service
       stripPrefix: false
-  prefix: /guardian
+  prefix: /guardian # 添加统一前缀
 
   sensitive-headers: Cookie,Set-Cookie,Authorization
   add-host-header: true # 重定向添加Host请求头

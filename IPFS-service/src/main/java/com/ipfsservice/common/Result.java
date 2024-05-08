@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @author Shawn i
  * @version 1.0
- * @description: TODO
+ * @description: 自定义统一返回类
  * @date 2024/4/27 20:56
  */
 @Data

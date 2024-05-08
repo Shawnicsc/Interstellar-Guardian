@@ -54,6 +54,7 @@ public class IpfsFilter extends ZuulFilter {
     public Object run() throws ZuulException {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
+        // 获取token
         String token = request.getHeader("token");
         // 获取请求的URL路径
         String requestURI = request.getRequestURI();
@@ -61,6 +62,7 @@ public class IpfsFilter extends ZuulFilter {
         for (String blockedPath : blockedPaths) {
             if (requestURI.startsWith(blockedPath)) {
                 if(token != null){
+                    // 校验token
                     Boolean result = restTemplate.postForObject("http://localhost:8081/user/verifyToken?token={token}",null, Boolean.class,token);
                     if(Boolean.TRUE.equals(result))
                         return null;

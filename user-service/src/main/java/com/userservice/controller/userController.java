@@ -29,7 +29,11 @@ import static com.userservice.common.constants.*;
 public class userController {
     @Autowired
     private UserService userService;
-
+    /**
+     * @description: 登录接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:54
+     */
     @PostMapping("/login")
     public Result login(@RequestBody User user, HttpServletRequest request){
         User getUser = userService.login(user,request);
@@ -38,13 +42,21 @@ public class userController {
 
         return new Result(CODE_200,"登录成功",getUser);
     }
-
+    /**
+     * @description: 注册接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:54
+     */
     @PostMapping("/register")
     public Result register(@RequestBody User user){
         User register = userService.register(user);
         return new Result(CODE_200,"注册成功",register);
     }
-
+    /**
+     * @description: 校验token接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:55
+     */
     @PostMapping("/verifyToken")
     public Boolean verifyToken(@RequestParam String token){
         if(StrUtil.isBlank(token)){

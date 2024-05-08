@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * @author Shawn i
  * @version 1.0
- * @description: TODO
+ * @description: 作为文件上传的载体
  * @date 2024/5/6 1:14
  */
 @Data

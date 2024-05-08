@@ -46,12 +46,12 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
 
     private IPFS ipfs;
 
-    private Jedis jedis = RedisCacheClient.getResource();
+    private Jedis jedis = RedisCacheClient.getResource(); // 获取redis 连接
 
     @PostConstruct
     public void setMultiAddr() {
         ipfs = new IPFS(multiAddr);
-    }
+    } // 连接 IPFS 节点
 
     @Override
     public String uploadToIpfs(MultipartFile file,Long userId) throws IOException {
@@ -88,11 +88,6 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         return addResult.hash.toString();
     }
 
-    /**
-     * @description: 下载 byte数据
-     * @author Shawn i
-     * @date: 2024/4/29 15:00
-     */
     @Override
     public byte[] downStr(String hash) {
         byte[] data = null;
@@ -107,11 +102,6 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         return data;
     }
 
-    /**
-     * @description: 下载文件到浏览器默认地址，btw 文件名无法获取，ipfs 通过内容寻址，文件名和hash值无直接关联
-     * @author Shawn i
-     * @date: 2024/4/29 15:10
-     */
     @Override
     public byte[] downFromIpfs(String hash) {
         byte[] data = null;
@@ -161,8 +151,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
     public List<IpfsFile> getList(Long userid) {
         QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
         ipfsFileQueryWrapper.eq("userid",userid);
-        List<IpfsFile> list = list(ipfsFileQueryWrapper);
-        return list;
+        return list(ipfsFileQueryWrapper);
     }
 
 }

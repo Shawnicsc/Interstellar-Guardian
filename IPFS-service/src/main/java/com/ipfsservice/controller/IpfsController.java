@@ -28,7 +28,11 @@ import static com.ipfsservice.common.constants.*;
 public class IpfsController {
     @Autowired
     private IpfsFileService ipfsFileService;
-
+    /**
+     * @description: 上传字符串接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:45
+     */
     @PostMapping("/uploadStr")
     public Result uploadStr(@RequestBody IpfsFile ipfsFile){
         try {
@@ -42,6 +46,11 @@ public class IpfsController {
             throw new MyException(CODE_500,"服务器错误");
         }
     }
+    /**
+     * @description: 上传文件接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:45
+     */
     @PostMapping("/uploadFile")
     public Result uploadFile(@MultipartForm fileDao fileDao) {
         try {
@@ -55,6 +64,11 @@ public class IpfsController {
             throw new MyException(CODE_500,"服务器错误");
         }
     }
+    /**
+     * @description: 下载文件接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:45
+     */
     @GetMapping("/downloadFile")
     public void downloadFromIpfs(@RequestParam String hash, HttpServletResponse response) {
         try {
@@ -77,6 +91,11 @@ public class IpfsController {
             throw new MyException(CODE_500,"下载失败");
         }
     }
+    /**
+     * @description: 下载字符接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:45
+     */
     @GetMapping("/downloadStr/{hash}")
     public Result downloadStr(@PathVariable String hash){
         try{
@@ -86,16 +105,31 @@ public class IpfsController {
             throw new MyException(CODE_500,"下载失败");
         }
     }
+    /**
+     * @description: 分享码生成 接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:46
+     */
     @PostMapping("/share")
     public Result shareCode(@RequestParam("hash") String hash){
         return new Result(CODE_200,"分享码生成成功",ipfsFileService.shareCode(hash));
     }
+    /**
+     * @description: 分享码校验接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:46
+     */
     @PostMapping("/check")
     public Result checkCode(@RequestParam(value = "hash") String checkCode){
         if(ipfsFileService.checkCode(checkCode) == null)
             return new Result(CODE_400,"分享码不存在");
         return new Result(CODE_200,"分享码存在",ipfsFileService.checkCode(checkCode));
     }
+    /**
+     * @description: 获取 hash list 接口
+     * @author Shawn i
+     * @date: 2024/5/8 9:46
+     */
     @GetMapping("/getList")
     public List<IpfsFile> getList(@RequestParam Long userId){
         return ipfsFileService.getList(userId);

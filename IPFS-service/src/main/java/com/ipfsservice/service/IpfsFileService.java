@@ -15,38 +15,48 @@ import java.util.List;
 */
 public interface IpfsFileService extends IService<IpfsFile> {
     /**
-     * 指定path+文件名称,上传至ipfs
-     * @return
-     * @throws IOException
+     * @description: 上传文件
+     * @author Shawn i
+     * @date: 2024/5/8 9:48
      */
     String uploadToIpfs(MultipartFile file,Long userId) throws IOException;
 
     /**
-     * 将byte格式的数据,上传至ipfs
-     * @param data
-     * @return
-     * @throws IOException
+     * @description: 将byte格式的数据,上传至ipfs
+     * @author Shawn i
+     * @date: 2024/5/8 9:48
      */
     String uploadToIpfs(byte[] data,Long userId) throws IOException;
 
     /**
-     * 根据Hash值,从ipfs下载内容,返回byte数据格式
-     *
-     * @param hash
-     * @return
+     * @description: 根据Hash值,从ipfs下载内容,返回byte数据格式
+     * @author Shawn i
+     * @date: 2024/5/8 9:48
      */
     byte[] downStr(String hash);
 
-    /**
-     * 根据Hash值,从ipfs下载内容,并写入指定文件destFilePath
-     *
-     * @param hash
-     */
+   /**
+    * @description: 根据Hash值,从ipfs下载内容,并写入指定文件destFilePath
+    * @author Shawn i
+    * @date: 2024/5/8 9:48
+    */
     byte[] downFromIpfs(String hash);
-
+    /**
+     * @description: 生成分享码
+     * @author Shawn i
+     * @date: 2024/5/8 9:47
+     */
     String shareCode(String hash);
-
+    /**
+     * @description: 校验分享码
+     * @author Shawn i
+     * @date: 2024/5/8 9:47
+     */
     String checkCode(String shareCode);
-
+    /**
+     * @description: 获取 hash list
+     * @author Shawn i
+     * @date: 2024/5/8 9:47
+     */
     List<IpfsFile> getList(Long userid);
 }
