@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     uploadStringData() {
-      this.ipfsFile.userid = this.userid;
+      this.ipfsFile.userid = this.user.id
       this.request.post('/ipfs/uploadStr',this.ipfsFile)
           .then(response => {
             if(response.code === "200")

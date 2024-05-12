@@ -11,6 +11,10 @@
               <i class="material-icons">person</i>
               <p class="hidden-lg hidden-md">Profile</p>
             </md-list-item>
+            <md-list-item @click="logout">
+              <i class="material-icons">logout</i>
+              <p class="hidden-lg hidden-md">Profile</p>
+            </md-list-item>
           </md-list>
         </div>
       </div>
@@ -19,7 +23,17 @@
 </template>
 
 <script>
+
 export default {
+  methods:{
+
+    logout(){
+      console.log("登出")
+      localStorage.removeItem("user");
+      this.$router.push('/login')
+      this.$message.success("登出成功")
+    }
+  }
 };
 </script>
 

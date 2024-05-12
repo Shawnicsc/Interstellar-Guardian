@@ -31,6 +31,7 @@ import MaterialDashboard from "./material-dashboard";
 
 import Chartist from "chartist";
 import request from "@/utils/request";
+import store from "@/store";
 
 // configure router
 const router = new VueRouter({
@@ -54,11 +55,11 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
     next({
       path: '/login',
-      query: { redirect: to.fullPath } // 将用户原本想要访问的页面作为参数传递给登录页面
     });
   } else if (to.path === '/login' && isLoggedIn) {
-    // 如果用户已经登录，且试图访问登录页面，则重定向到主页或其他页面
-    next('/dashboard'); // 例如跳转到主页
+    localStorage.setItem("currentPathName",to.name) //设置当前路由名称
+    store.commit("setPath")
+    next()
   } else {
     next(); // 继续路由导航
   }
@@ -69,6 +70,7 @@ new Vue({
   el: "#app",
   render: (h) => h(App),
   router,
+  store,
   data: {
     Chartist: Chartist,
   },

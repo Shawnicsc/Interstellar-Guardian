@@ -1,3 +1,7 @@
+
+
+
+
 # 项目计划书
 
 ## 一、选题
@@ -25,17 +29,17 @@
 
 `VUE`  version：Vue3
 
- `Node.js` version：18.19.1
+`Node.js` version：18.19.1
 
 ### 后端
 
-`SpringCloud` ：Alibaba Cloud
+`SpringCloud` ：`Eureka` `RestTemplate` `zuul` 
 
- `SpringBoot` version ：2.6.13
+`SpringBoot` version ：2.6.13
 
- `Mybatis-plus`  3.5.6
+`Mybatis-plus`  3.5.6
 
- `Maven` version ：3.6.1
+`Maven` version ：3.6.1
 
 `Redis` version 3.7.0
 
@@ -46,12 +50,12 @@
 `IPFS Desktop` version：0.34.0
 
 ### 数据库设计
-1. user
-2. ipfsFile
+1. `user.sql`
+2. `ipfsFile.sql`
 
-#### 7. 功能和性能测试
+### 功能和性能测试
 
-jmeter 测试结果 不涉及数据库接口 1000个线程测试
+jmeter 测试结果1000个线程测试
 
 ![1714832640770](assets/1714832640770.png)
 
@@ -59,6 +63,18 @@ jmeter 测试结果 不涉及数据库接口 1000个线程测试
 
 ![1714836775929](assets/1714836775929.png)
 
+### 项目启动
+前端：
+```command
+npm run serve
+```
+后端 service
+```java
+// 先启动 serve-center
+// 启动 IPFS 服务
+// 启动 Redis服务
+// 启动剩余service
+```
 
 ## 五、小组分工
 
