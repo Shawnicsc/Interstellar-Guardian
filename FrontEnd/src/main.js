@@ -48,6 +48,7 @@ Vue.use(GlobalComponents);
 Vue.use(GlobalDirectives);
 Vue.use(ElementUI, {size:"mini"});
 
+let EXPIRESTIME = 86400000;
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("user");
 
@@ -56,10 +57,23 @@ router.beforeEach((to, from, next) => {
     next({
       path: '/login',
     });
-  } else if (to.path === '/login' && isLoggedIn) {
-    localStorage.setItem("currentPathName",to.name) //设置当前路由名称
-    store.commit("setPath")
-    next()
+  }
+  else if(to.path === '/login'){
+    localStorage.setItem("currentPathName",to.name); //设置当前路由名称
+    store.commit("setPath");
+    next();
+  }
+  else if (isLoggedIn) {
+    let date = new Date().getTime();
+    if(date - isLoggedIn.startTime > EXPIRESTIME){
+      localStorage.removeItem('user');
+      next({
+        path: '/login'
+      });
+    }
+    localStorage.setItem("currentPathName",to.name); //设置当前路由名称
+    store.commit("setPath");
+    next();
   } else {
     next(); // 继续路由导航
   }

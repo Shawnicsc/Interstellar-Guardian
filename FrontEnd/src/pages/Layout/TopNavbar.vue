@@ -29,8 +29,8 @@ export default {
 
     logout(){
       console.log("登出")
-      localStorage.removeItem("user");
       this.$router.push('/login')
+      localStorage.removeItem("user");
       this.$message.success("登出成功")
     }
   }

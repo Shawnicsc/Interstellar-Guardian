@@ -47,7 +47,9 @@ export default {
             if(res.code === '200'){
               if(localStorage.getItem("user") !== null)
                 localStorage.removeItem("user")
-              localStorage.setItem("user",JSON.stringify(res.data)) // 存储用户信息
+
+              let data = Object.assign(res.data, { startTime: new Date().getTime() })
+              localStorage.setItem("user",JSON.stringify(data)) // 存储用户信息
               console.log(res.data)
               this.$router.push("/dashboard")
               this.$message.success("登录成功")
