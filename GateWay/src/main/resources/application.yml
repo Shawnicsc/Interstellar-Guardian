@@ -7,6 +7,10 @@ server:
 spring:
   application:
     name: gateway
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
 # 配置消息转发路由
 zuul:
   routes:

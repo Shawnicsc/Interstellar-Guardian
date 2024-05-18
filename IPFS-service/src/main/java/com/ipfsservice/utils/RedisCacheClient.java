@@ -7,7 +7,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import static com.ipfsservice.common.constants.CODE_600;
 
 // 创建一个全局的Jedis连接池
-public class RedisCacheClient {
+public class  RedisCacheClient {
 
     private static final JedisPool jedisPool;
 

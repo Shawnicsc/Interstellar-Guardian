@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: ipfs-service
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
     #数据源连接信息
   datasource:
       username: root
