@@ -2,6 +2,7 @@
   <div>
     <md-table v-model="users" :table-header-color="tableHeaderColor">
       <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-cell md-label="fileName">{{ item.fileName }}</md-table-cell>
         <md-table-cell md-label="HashCode">{{ item.hashcode }}</md-table-cell>
         <md-table-cell md-label="UserID">{{ item.userid }}</md-table-cell>
         <md-table-cell>

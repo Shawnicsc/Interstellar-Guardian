@@ -72,13 +72,15 @@ public class IpfsController {
     @GetMapping("/downloadFile")
     public void downloadFromIpfs(@RequestParam String hash, HttpServletResponse response) {
         try {
+            IpfsFile file = ipfsFileService.getByHash(hash);
+            String fileName = file.getFileName();
             byte[] bytes = ipfsFileService.downFromIpfs(hash);
             if(bytes!=null){
                 // 清空response
                 response.reset();
                 // 设置响应头，告知浏览器下载文件
                 response.setContentType("application/octet-stream");
-                response.setHeader("Content-Disposition", "attachment; filename=\"ipfsFile.ext\""); // 设置下载文件的默认名称
+                response.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\""); // 设置下载文件的默认名称
                 System.out.println("response");
                 // 获取输出流，将数据写入到浏览器
                 OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());

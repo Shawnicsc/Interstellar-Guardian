@@ -59,4 +59,10 @@ public interface IpfsFileService extends IService<IpfsFile> {
      * @date: 2024/5/8 9:47
      */
     List<IpfsFile> getList(Long userid);
+    /**
+     * @description: 根据hash获取 ipfsFile
+     * @author Shawn i
+     * @date: 2024/5/20 16:30
+     */
+    IpfsFile getByHash(String hash);
 }

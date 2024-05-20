@@ -33,15 +33,17 @@
 
 ### 后端
 
-`SpringCloud` ：`Eureka` `RestTemplate` `zuul` 
+`SpringCloud` ：服务注册：`Eureka ` 服务调用： `RestTemplate ` 网关： `zuul`  分布式架构
 
-`SpringBoot` version ：2.6.13
+`SpringBoot` version ：2.6.13 Web框架
 
-`Mybatis-plus`  3.5.6
+ `Mybatis-plus`  3.5.6
 
 `Maven` version ：3.6.1
 
 `Redis` version 3.7.0
+
+`JWT` : Java 安全框架
 
 `Mysql`
 
@@ -52,6 +54,12 @@
 ### 数据库设计
 1. `user.sql`
 2. `ipfsFile.sql`
+
+### 逻辑实现
+
+登录逻辑
+
+
 
 ### 功能和性能测试
 

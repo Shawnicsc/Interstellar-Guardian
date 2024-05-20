@@ -9,6 +9,7 @@
             <result property="hashcode" column="HashCode" jdbcType="VARCHAR"/>
             <result property="userid" column="userId" jdbcType="BIGINT"/>
             <result property="secretKey" column="secretKey" jdbcType="VARCHAR"/>
+            <result property="fileName" column="fileName" javaType="VARCHAR"/>
             <result property="createTime" column="Create_Time" jdbcType="TIMESTAMP"/>
             <result property="modifiedTime" column="Modified_Time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
@@ -16,7 +17,7 @@
 
     <sql id="Base_Column_List">
         id,HashCode,userId,
-        secretKey,Create_Time,Modified_Time,
+        secretKey,Create_Time,Modified_Time,fileName,
         isDelete
     </sql>
 </mapper>

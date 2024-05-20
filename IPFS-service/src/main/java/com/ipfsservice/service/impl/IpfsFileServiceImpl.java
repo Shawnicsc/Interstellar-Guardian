@@ -59,12 +59,13 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         File tempFile = File.createTempFile(file.getOriginalFilename(), null);
         // 将 MultipartFile 写入临时文件
         file.transferTo(tempFile);
-
+        String fileName = file.getOriginalFilename();
         NamedStreamable.FileWrapper uploadFile = new NamedStreamable.FileWrapper(tempFile);
 
         MerkleNode addResult = ipfs.add(uploadFile).get(0);
 
         IpfsFile ipfsFile = new IpfsFile();
+        ipfsFile.setFileName(fileName);
         ipfsFile.setHashcode(addResult.hash.toString());
         ipfsFile.setUserid(userId);
         this.save(ipfsFile);
@@ -152,6 +153,16 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
         ipfsFileQueryWrapper.eq("userid",userid);
         return list(ipfsFileQueryWrapper);
+    }
+
+    @Override
+    public IpfsFile getByHash(String hash) {
+        QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
+        ipfsFileQueryWrapper.eq("HashCode",hash);
+        IpfsFile file = getOne(ipfsFileQueryWrapper);
+        if(file == null)
+            throw new MyException(CODE_401,"目标文件不存在");
+        return file;
     }
 
 }
