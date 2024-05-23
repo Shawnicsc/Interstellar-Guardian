@@ -1,0 +1,21 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 9001
+
+#TODO 数据库连接池
+
+# eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    # 续约间隔 默认30s
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间 默认90s
+    lease-expiration-duration-in-seconds: 5
+spring:
+  application:
+    name: crypto-service
