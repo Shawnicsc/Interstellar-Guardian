@@ -22,6 +22,10 @@ zuul:
       path: /user/**
       serviceId: user-service
       stripPrefix: false
+    crypto-service:
+      path: /cipher/**
+      serviceId: crypto-service
+      stripPrefix: false
   prefix: /guardian # 添加统一前缀
 
   sensitive-headers: Cookie,Set-Cookie,Authorization

@@ -9,7 +9,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName ipfsfile
  */
 @TableName(value ="ipfsfile")
@@ -40,6 +40,10 @@ public class IpfsFile implements Serializable {
      * 文件名
      */
     private String fileName;
+    /**
+     * 是否下载
+     */
+    private String isDownload;
     /**
      * 创建时间
      */

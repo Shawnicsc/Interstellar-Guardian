@@ -3,6 +3,7 @@ package com.ipfsservice.controller;
 import com.ipfsservice.Exception.MyException;
 import com.ipfsservice.common.Result;
 import com.ipfsservice.domain.IpfsFile;
+import com.ipfsservice.domain.entity.downloadDao;
 import com.ipfsservice.domain.entity.fileDao;
 import com.ipfsservice.service.IpfsFileService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -70,9 +71,9 @@ public class IpfsController {
      * @date: 2024/5/8 9:45
      */
     @GetMapping("/downloadFile")
-    public void downloadFromIpfs(@RequestParam String hash, HttpServletResponse response) {
+    public void downloadFromIpfs(@RequestParam String hash, @RequestParam Long userId,HttpServletResponse response) {
         try {
-            IpfsFile file = ipfsFileService.getByHash(hash);
+            IpfsFile file = ipfsFileService.getByHash(hash,userId);
             String fileName = file.getFileName();
             byte[] bytes = ipfsFileService.downFromIpfs(hash);
             if(bytes!=null){
@@ -88,6 +89,7 @@ public class IpfsController {
                 outputStream.flush();
                 outputStream.close();
             }
+            ipfsFileService.updateDownload(hash,userId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new MyException(CODE_500,"下载失败");
@@ -113,8 +115,8 @@ public class IpfsController {
      * @date: 2024/5/8 9:46
      */
     @PostMapping("/share")
-    public Result shareCode(@RequestParam("hash") String hash){
-        return new Result(CODE_200,"分享码生成成功",ipfsFileService.shareCode(hash));
+    public Result shareCode(downloadDao downloadDao){
+        return new Result(CODE_200,"分享码生成成功",ipfsFileService.shareCode(downloadDao.getHash(),downloadDao.getUserId()));
     }
     /**
      * @description: 分享码校验接口
@@ -122,10 +124,10 @@ public class IpfsController {
      * @date: 2024/5/8 9:46
      */
     @PostMapping("/check")
-    public Result checkCode(@RequestParam(value = "hash") String checkCode){
-        if(ipfsFileService.checkCode(checkCode) == null)
+    public Result checkCode(downloadDao downloadDao){
+        if(ipfsFileService.checkCode(downloadDao.getHash(),downloadDao.getUserId()) == null)
             return new Result(CODE_400,"分享码不存在");
-        return new Result(CODE_200,"分享码存在",ipfsFileService.checkCode(checkCode));
+        return new Result(CODE_200,"分享码存在",ipfsFileService.checkCode(downloadDao.getHash(),downloadDao.getUserId()));
     }
     /**
      * @description: 获取 hash list 接口
@@ -135,5 +137,25 @@ public class IpfsController {
     @GetMapping("/getList")
     public List<IpfsFile> getList(@RequestParam Long userId){
         return ipfsFileService.getList(userId);
+    }
+
+    /**
+     * @description: 获取已下载文件
+     * @author Shawn i
+     * @date: 2024/5/23 15:58
+     */
+    @GetMapping("getDownloadList")
+    public List<IpfsFile> getDownloadList(@RequestParam Long userId){
+        return ipfsFileService.getDownloadList(userId);
+    }
+
+    /**
+     * @author: Shawn i
+     * @description: 获取 IPFS 网络流量
+     * @date: 2024/5/23 21:42
+     **/
+    @GetMapping("/getNet")
+    public Result getNet(){
+        return new Result(CODE_200,"网络流量获取成功",ipfsFileService.getNet());
     }
 }

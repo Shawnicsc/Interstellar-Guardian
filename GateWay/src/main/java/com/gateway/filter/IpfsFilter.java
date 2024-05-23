@@ -4,14 +4,11 @@ package com.gateway.filter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +30,7 @@ public class IpfsFilter extends ZuulFilter {
     public IpfsFilter() {
         // 添加需要拦截的路径到集合中
         blockedPaths.add("/guardian/ipfs/");
+        blockedPaths.add("/guardian/cipher/");
     }
 
     @Override

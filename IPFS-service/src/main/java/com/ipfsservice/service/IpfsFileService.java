@@ -1,10 +1,9 @@
 package com.ipfsservice.service;
 
-import com.ipfsservice.domain.IpfsFile;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ipfsservice.domain.IpfsFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -46,13 +45,13 @@ public interface IpfsFileService extends IService<IpfsFile> {
      * @author Shawn i
      * @date: 2024/5/8 9:47
      */
-    String shareCode(String hash);
+    String shareCode(String hash,Long userId);
     /**
      * @description: 校验分享码
      * @author Shawn i
      * @date: 2024/5/8 9:47
      */
-    String checkCode(String shareCode);
+    IpfsFile checkCode(String shareCode,Long userId);
     /**
      * @description: 获取 hash list
      * @author Shawn i
@@ -64,5 +63,26 @@ public interface IpfsFileService extends IService<IpfsFile> {
      * @author Shawn i
      * @date: 2024/5/20 16:30
      */
-    IpfsFile getByHash(String hash);
+    IpfsFile getByHash(String hash,Long userId);
+
+    /**
+     * @description: 标识已下载
+     * @author Shawn i
+     * @date: 2024/5/23 15:48
+     */
+    void updateDownload(String hash,Long userId);
+
+    /**
+     * @description: 获取已下载文件
+     * @author Shawn i
+     * @date: 2024/5/23 15:50
+     */
+    List<IpfsFile> getDownloadList(Long userid);
+
+    /**
+     * @author: Shawn i
+     * @description: 获取 IPFS 网络流量
+     * @date: 2024/5/23 21:37
+     **/
+    String getNet();
 }
