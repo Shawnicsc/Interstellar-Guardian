@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 
 import static com.ipfsservice.common.constants.CODE_401;
@@ -74,7 +75,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
     }
 
     @Override
-    public String uploadToIpfs(byte[] data,Long userId) throws IOException {
+    public String uploadToIpfs(byte[] data, Long userId) throws IOException {
         NamedStreamable.ByteArrayWrapper file = new NamedStreamable.ByteArrayWrapper(data);
         MerkleNode addResult = ipfs.add(file).get(0);
 
@@ -82,12 +83,13 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         ipfsFile.setHashcode(addResult.hash.toString());
         ipfsFile.setUserid(userId);
         this.save(ipfsFile);
-        if(StrUtil.isBlank(jedis.get(ipfsFile.getHashcode())))
-            jedis.del(ipfsFile.getHashcode());
-        jedis.set(ipfsFile.getHashcode(),new String(data));
+
+        // Store data in Redis
+        jedis.setex(ipfsFile.getHashcode(), 3600, new String(data)); // Cache data for 1 hour
 
         return addResult.hash.toString();
     }
+
 
     @Override
     public byte[] downStr(String hash) {
@@ -119,34 +121,61 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
 
     @Override
     public String shareCode(String hash) {
-        //查找目标hash
+        // 检查 Redis 缓存中是否存在 secretKey
+        String cachedSecretKey = jedis.get("secretKey:" + hash);
+        if (cachedSecretKey != null) {
+            return cachedSecretKey;
+        }
+
+        // 查找目标 hash
         QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
-        ipfsFileQueryWrapper.eq("HashCode",hash);
+        ipfsFileQueryWrapper.eq("HashCode", hash);
         IpfsFile file = getOne(ipfsFileQueryWrapper);
-        if(file == null)
-            throw new MyException(CODE_401,"目标文件不存在");
-        if(file.getSecretKey() != null)
-            return file.getSecretKey();
-        //设置分享码
-        file.setSecretKey(SecureUtil.md5(file.getUserid()+hash));
-        //更新数据库
+        if (file == null) {
+            throw new MyException(CODE_401, "目标文件不存在");
+        }
+
+        // 生成新的 secretKey
+        String newSecretKey = SecureUtil.md5(file.getUserid() + hash);
+        file.setSecretKey(newSecretKey);
+        file.setModifiedTime(new java.sql.Timestamp(System.currentTimeMillis()));
+
+        // 更新 Redis 缓存中的 secretKey 和时间戳
+        String redisKey = "secretKey:" + hash;
+        jedis.set(redisKey, newSecretKey);
+        jedis.set(redisKey + ":timestamp", String.valueOf(System.currentTimeMillis()));
+        jedis.expire(redisKey, 2 * 60 * 60); // 两小时后过期
+
+        // 更新数据库
         boolean update = updateById(file);
-        if(!update)
-            throw new MyException(CODE_500,"服务器错误");
+        if (!update) {
+            throw new MyException(CODE_500, "服务器错误");
+        }
 
-        return file.getSecretKey();
-
+        return newSecretKey;
     }
 
-    @Override
     public String checkCode(String shareCode) {
+        // 检查 Redis 缓存中是否存在 hashcode
+        String hashcode = jedis.get(shareCode);
+        if (hashcode != null) {
+            return hashcode;
+        }
+
+        // 从数据库中查找对应的 hashcode
         QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
-        ipfsFileQueryWrapper.eq("secretKey",shareCode);
+        ipfsFileQueryWrapper.eq("secretKey", shareCode);
         IpfsFile one = getOne(ipfsFileQueryWrapper);
-        if(one == null)
+        if (one == null) {
             return null;
+        }
+
+        // 将映射关系存储到 Redis 中
+        jedis.setex(shareCode, 2 * 60 * 60, one.getHashcode()); // 两小时后过期
+
         return one.getHashcode();
     }
+
 
     @Override
     public List<IpfsFile> getList(Long userid) {

@@ -26,3 +26,7 @@ zuul:
 
   sensitive-headers: Cookie,Set-Cookie,Authorization
   add-host-header: true # 重定向添加Host请求头
+
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
