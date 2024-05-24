@@ -4,20 +4,25 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Random;
+/**
+ * @author: Shawn i
+ * @description: Paillier 同态加密
+ * @date: 2024/5/24 12:04
+ **/
 
 @Service
 public class Paillier {
     /**
-     * p and q are two large primes. lambda = lcm(p-1, q-1) =
+     * p q 为 两个大素数 lambda = lcm(p-1, q-1) =
      * (p-1)*(q-1)/gcd(p-1, q-1).
      */
     private BigInteger p, q, lambda;
     /**
-     * n = p*q, where p and q are two large primes.
+     * n = p*q
      */
     public BigInteger n;
     /**
-     * nsquare = n*n
+     * n square = n*n
      */
     public BigInteger nsquare;
     /**
