@@ -1,6 +1,6 @@
 package com.ipfsservice.service.impl;
 
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -135,7 +135,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
 
         // 生成新的 secretKey
         String temp = UUID.randomUUID().toString();
-        String newSecretKey = SecureUtil.md5(temp + hash);
+        String newSecretKey = DigestUtil.sha256Hex(temp + hash);
         file.setSecretKey(newSecretKey);
         file.setModifiedTime(new java.sql.Timestamp(System.currentTimeMillis()));
 
@@ -160,6 +160,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         // 检查 Redis 缓存中是否存在 hashcode
         String hashcode = jedis.get(shareCode);
         String filename = jedis.get(hashcode);
+
         if (hashcode != null) {
             IpfsFile ipfsFile = new IpfsFile();
             ipfsFile.setFileName(filename);
@@ -203,6 +204,7 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
     @Override
     public void updateDownload(String hash, Long userId) {
         QueryWrapper<IpfsFile> ipfsFileQueryWrapper = new QueryWrapper<>();
+
         ipfsFileQueryWrapper.eq("HashCode", hash);
         ipfsFileQueryWrapper.eq("userid", userId);
         IpfsFile file = getOne(ipfsFileQueryWrapper);
@@ -228,8 +230,8 @@ public class IpfsFileServiceImpl extends ServiceImpl<IpfsFileMapper, IpfsFile>
         String format = formatter.format(date);
         try {
             Map stats = ipfs.stats.bw();
-            Long totalIn = (Long) stats.get("TotalIn");
-            Long totalOut = (Long) stats.get("TotalOut");
+            Integer totalIn = (Integer) stats.get("TotalIn");
+            Integer totalOut = (Integer) stats.get("TotalOut");
             jsonObject.put("TotalIn", totalIn);
             jsonObject.put("TotalOut", totalOut);
             jsonObject.put("time", format);

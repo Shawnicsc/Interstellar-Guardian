@@ -8,14 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="IPFS-service" />
+        <module name="GateWay" />
+        <module name="crypto-service" />
         <module name="serve-center" />
         <module name="user-service" />
         <module name="commons" />
-        <module name="GateWay" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="commons" target="1.8" />
+      <module name="webSocket" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

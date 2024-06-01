@@ -33,15 +33,15 @@
 
 ### 后端
 
-`SpringCloud` ：服务注册：`Eureka ` 服务调用： `RestTemplate ` 网关： `zuul`  分布式架构
+`SpringCloud` ：分布式架构 服务注册：`Eureka ` 服务调用： `RestTemplate ` 网关： `zuul`   分布式架构
 
 `SpringBoot` version ：2.6.13 Web框架
 
- `Mybatis-plus`  3.5.6
+ `Mybatis-plus` ：3.5.6
 
 `Maven` version ：3.6.1
 
-`Redis` version 3.7.0
+`Redis` version ：3.7.0
 
 `JWT` : Java 安全框架
 
@@ -57,9 +57,17 @@
 
 ### 逻辑实现
 
-登录逻辑
+1、 身份验证和授权机制：使用 JWT 安全框架中 TOKEN的生成来确保请求使有效的，并为token设置存活时间
 
+2、 密钥的安全管理：使用SHA256加密算法对用户密码进行加盐加密
 
+3、 共享：通过使用SHA256加密算法，生成分享码进行分享。
+
+4、 数据加密功能：为用户提供字符串加密算法界面，实现了![1717224870725](E:\java-project\Privacy-Guardian\assets\1717224870725.png)
+
+5、 简洁明了的用户界面：使用ant design vue框架，搭建整个用户界面，并且使用 IPFS API 和 Echarts 实现了IPFS网络带宽的实时检测。
+
+6、 Redis 缓存：项目集成了redisUtils，提高项目运行速度。
 
 ### 功能和性能测试
 

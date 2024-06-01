@@ -5,9 +5,14 @@
     <file url="file://$PROJECT_DIR$/GateWay/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/IPFS-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/IPFS-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cipherService" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/cipherService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cipherService/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serve-center/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serve-center/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webSocket/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webSocket/src/main/resources" charset="UTF-8" />
   </component>
 </project>

@@ -2,15 +2,15 @@ package com.userservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.userservice.Exception.MyException;
 import com.userservice.domain.User;
-import com.userservice.utils.TokenUtils;
-import com.userservice.service.UserService;
 import com.userservice.mapper.UserMapper;
+import com.userservice.service.UserService;
+import com.userservice.utils.TokenUtils;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new MyException(CODE_401,"该用户已存在");
         }
         else{
-            String safePassword = SecureUtil.md5(user.getUserPassword() + SALT);
+            String safePassword = DigestUtil.sha256Hex(user.getUserPassword() + SALT );
             user.setUserPassword(safePassword);
             save(user);
         }
